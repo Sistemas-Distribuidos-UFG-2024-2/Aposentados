@@ -10,9 +10,9 @@
 
 ### Descrição do Projeto
 
-Este projeto foi desenvolvido como parte da disciplina **Sistemas Distribuídos** na **Universidade Federal de Goiás (UFG)**. O objetivo é transformar um problema simples, o cálculo de aposentadoria, em um sistema robusto utilizando conceitos de sistemas distribuídos, incluindo **Peer-to-Peer (P2P)** e **Cloud Computing**.
+Este projeto está sendo desenvolvido como parte da disciplina **Sistemas Distribuídos** na **Universidade Federal de Goiás (UFG)**. O objetivo é transformar um problema simples, o cálculo de aposentadoria, em um sistema robusto utilizando conceitos de sistemas distribuídos, incluindo **Peer-to-Peer (P2P)** e **Cloud Computing**.
 
-O projeto foi desenvolvido por um grupo de cinco alunos, com foco em aplicar conceitos teóricos aprendidos em sala de aula em uma aplicação prática e escalável.
+Construiremos esse projeto com o fim de aplicar conceitos teóricos aprendidos em sala de aula em uma aplicação prática e escalável.
 
 ### Funcionalidades
 

@@ -1,5 +1,11 @@
 # Cluster Masters
 
+* ANDRESSA ALMEIDA DOS SANTOS  
+* JOÃO FELIPE PERES LIMA  
+* MATEUS EDUARDO SILVA RIBEIRO  
+* MAURICIO GOMES ROCHA  
+* PHILIPPE AUGUSTO MONTEIRO SILVA  
+
 ## Projeto de Sistemas Distribuídos - Cálculo de Aposentadoria
 
 ### Descrição do Projeto

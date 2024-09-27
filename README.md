@@ -1,10 +1,10 @@
 # Cluster Masters
 
-* ANDRESSA ALMEIDA DOS SANTOS  
-* JOÃO FELIPE PERES LIMA  
-* MATEUS EDUARDO SILVA RIBEIRO  
-* MAURICIO GOMES ROCHA  
-* PHILIPPE AUGUSTO MONTEIRO SILVA  
+* Andressa Almeida dos Santos
+* João Felipe Peres Lima
+* Mateus Eduardo Silva Ribeiro
+* Mauricio Gomes Rocha
+* Philippe Augusto Monteiro Silva 
 
 ## Projeto de Sistemas Distribuídos - Cálculo de Aposentadoria
 

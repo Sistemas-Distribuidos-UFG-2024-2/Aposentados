@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<methodCall>
+  <methodName>calcular_salario_liquido</methodName>
+  <params>
+    <param>
+      <value><string>João</string></value>
+    </param>
+    <param>
+      <value><string>A</string></value>
+    </param>
+    <param>
+      <value><double>3000.0</double></value>
+    </param>
+    <param>
+      <value><int>1</int></value>
+    </param>
+  </params>
+</methodCall>

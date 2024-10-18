@@ -1,0 +1,6 @@
+Para que o codigo funcione, é preciso executar os seguintes comandos:
+
+pip install xmlrpc (biblioteca xmlrpc no python)
+obs: se a sua versao do python for maior do que 3.x, voce nao precisa realizar esse comando.
+
+npm install xmlrpc (biblioteca xmlrpc no node.js)

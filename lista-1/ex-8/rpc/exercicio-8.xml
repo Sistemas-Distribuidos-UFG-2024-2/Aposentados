@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<methodCall>
-  <methodName>calcular_credito</methodName>
-  <params>
-    <param>
-      <value><double>500.0</double></value>
-    </param>
-  </params>
-</methodCall>

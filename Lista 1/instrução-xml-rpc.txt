@@ -1,0 +1,5 @@
+1. Abra o Postman e crie uma nova requisição do tipo POST.
+2. Defina a URL para http://127.0.0.1:65432/.
+3. No corpo da requisição, selecione a opção raw e escolha XML como formato.
+4. Cole o XML da requisição no corpo.
+5. Envie a requisição.

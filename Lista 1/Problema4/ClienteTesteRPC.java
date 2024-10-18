@@ -5,7 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import javax.swing.JOptionPane;
 
-public class ClienteRMITeste {
+public class ClienteTesteRPC {
     public static void main(String[] args) {
         try {
             String sexo = JOptionPane.showInputDialog("Digite seu Sexo (M/F):");

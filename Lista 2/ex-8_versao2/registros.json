@@ -1,0 +1,10 @@
+{
+    "usuario1@email.com": {
+        "ip": "192.168.56.1",
+        "port": 6000
+    },
+    "usuario2@email.com": {
+        "ip": "192.168.56.1",
+        "port": 6001
+    }
+}

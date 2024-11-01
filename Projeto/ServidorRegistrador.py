@@ -61,7 +61,7 @@ def handle_client(conn, addr):
                         cpf_existente = any(func["cpf"] == funcionario["cpf"] for func in clients.values())
                         
                         if cpf_existente:
-                            conn.send("APOSENTADO_JA_CADASTRADO".encode())
+                            conn.send("Valido".encode()) ##APOSENTADO_JA_CADASTRADO
                         else:
                             # Define o identificador do funcionário automaticamente
                             identifier = f"Aposentado{len(clients) + 1}"
@@ -73,6 +73,7 @@ def handle_client(conn, addr):
                             conn.send(f"{identifier}_CADASTRADO".encode())
                     else:
                         conn.send("DADOS_FUNCIONARIO_INVALIDOS".encode())
+                        print(funcionario)
                 
                 elif operation == "PESQUISAR_FUNCIONARIO":
                     if funcionario:

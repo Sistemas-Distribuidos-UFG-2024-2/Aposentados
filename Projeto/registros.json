@@ -6,5 +6,21 @@
         "cargo": "Desenvolvedor",
         "cpf": "123.132.132-66",
         "salario": 5000
+    },
+    "Aposentado2": {
+        "nome": "Joao Silva",
+        "idade": "77",
+        "tempoDeTrabalho": "60",
+        "cargo": "Desenvolvedor",
+        "cpf": "123.132.132-55",
+        "salario": 5000
+    },
+    "Aposentado3": {
+        "nome": "Joao Silva",
+        "idade": "77",
+        "tempoDeTrabalho": "60",
+        "cargo": "Desenvolvedor",
+        "cpf": "123.132.132-77",
+        "salario": 5000
     }
 }

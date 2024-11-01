@@ -13,11 +13,11 @@ def verificar_aposentadoria(idade, tempo_servico, cpf):
         return 'Não Aposentado'
 
 async def checagem_usuario(funcionario):
-    reader, writer = await asyncio.open_connection('127.0.0.1', 5005)  # Conectando ao servidor registrador
+    reader, writer = await asyncio.open_connection('127.0.0.1', 5005)  # Conectando ao servidor de validação
 
     # Enviando dados do funcionário para o servidor de validação
     request = {
-        "operation": "CADASTRAR_FUNCIONARIO",  # OPERAÇÃO QUE O SERVIDOR REGISTRADOR VAI REALIZAR
+        "operation": "CADASTRAR_FUNCIONARIO",  #OPERAÇÃO QUE O SERVIDOR REGISTRADOR VAI REALIZAR
         "funcionario": funcionario
     }
     
@@ -34,7 +34,7 @@ async def checagem_usuario(funcionario):
     await writer.wait_closed()
 
     # Retorna True se o servidor de validação indicar que o usuário é válido
-    return resposta_decodificada == "Valido" # Isso deve ser diferente, considerando que o servidor irá enviar multiplas respostas.
+    return resposta_decodificada == "Valido"
 
         
 async def handle_connection(reader, writer):
@@ -70,7 +70,7 @@ async def handle_connection(reader, writer):
     await writer.wait_closed()
 
 async def main():
-    server = await asyncio.start_server(handle_connection, '127.0.0.1', 9001)  # Rodando em 9001
+    server = await asyncio.start_server(handle_connection, '127.0.0.1', 9002)  # Rodando em 9001
     addr = server.sockets[0].getsockname()
     print(f'Servidor rodando em {addr}')
 

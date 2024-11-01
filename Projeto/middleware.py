@@ -57,7 +57,7 @@ async def handle_client(reader, writer):
     print("Conexão recebida")
 
     # Recebendo o nome do serviço solicitado
-    data = await reader.read(100)
+    data = await reader.read(1024)
     service_name = data.decode().strip()
 
     server_ip, server_port = await get_next_server(service_name)

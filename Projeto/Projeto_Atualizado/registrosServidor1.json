@@ -16,5 +16,23 @@
         "cpf": "123.132.132-77",
         "salario": 5000,
         "data_hora_cadastro": "2023-11-06 12:12:43"
+    },
+    "Aposentado3": {
+        "nome": "mateus",
+        "idade": "12",
+        "tempoDeTrabalho": "30",
+        "cargo": "estagiario",
+        "cpf": "123.456.789-00",
+        "salario": "2000",
+        "data_hora_cadastro": "2024-11-29 12:25:32"
+    },
+    "Aposentado4": {
+        "nome": "pedro",
+        "idade": "60",
+        "tempoDeTrabalho": "50",
+        "cargo": "engenheiro",
+        "cpf": "987.654.321-00",
+        "salario": "6000",
+        "data_hora_cadastro": "2024-11-29 12:41:48"
     }
 }

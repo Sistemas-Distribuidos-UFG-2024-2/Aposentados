@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='interface.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+        .data-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .data-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .data-key {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #4CAF50;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Resultado da Operação</h1>
+    <div class="container">
+        {% if response %}
+            <ul class="data-list">
+                {% for key, value in response.items() %}
+                    <li><span class="data-key">{{ key }}:</span> {{ value }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Nenhuma resposta recebida.</p>
+        {% endif %}
+        <a class="back-link" href="{{ url_for('menu_adm') }}">Voltar</a>
+    </div>
+</body>
+</html>

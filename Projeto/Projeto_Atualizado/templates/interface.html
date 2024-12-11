@@ -1,0 +1,20 @@
+<!-- templates/interface.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSS - Menu Principal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='interface.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Bem-vindo ao Sistema INSS</h1>
+        <div class="menu">
+            <a href="{{ url_for('menu_usuario') }}" class="button">Entrar como Usuário</a>
+            <a href="{{ url_for('menu_adm') }}" class="button">Entrar como Administrador</a>
+            <a href="{{ url_for('sair') }}" class="button">Sair</a>
+        </div>
+    </div>
+</body>
+</html>

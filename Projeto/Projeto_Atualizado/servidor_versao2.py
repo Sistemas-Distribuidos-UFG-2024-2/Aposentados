@@ -22,8 +22,8 @@ def calcular_valor_aposentadoria(media_salarial, tempo_contribuicao):
     valor_final = min(base + adicional, media_salarial)
     return valor_final
 
-MIDDLEWARE_IP = "localhost"
-MIDDLEWARE_REGISTRATION_PORT = 8081
+MIDDLEWARE_IP = "127.0.0.1" 
+MIDDLEWARE_REGISTRATION_PORT = 9000  # Porta do Serviço de Nomes
 
 async def register_with_middleware(service_name, server_ip, server_port):
     try:

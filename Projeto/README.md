@@ -30,6 +30,7 @@ Siga as instruções abaixo para rodar o projeto de forma simples e eficiente:
 - Certifique-se de ter as dependências necessárias instaladas:
   - Para Windows, verifique o ambiente CMD ou PowerShell.
   - Para Linux, utilize o bash ou shell compatível.
+  - Bibliotecas python instaladas: flask, asyncio, json
 
 ## 🚀 Dúvidas?
 Entre em contato conosco para qualquer esclarecimento adicional!

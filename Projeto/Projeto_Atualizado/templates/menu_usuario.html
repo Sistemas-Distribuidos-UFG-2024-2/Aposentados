@@ -5,19 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu do Usuário</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='interface.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='interface_usuario.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Menu do Usuário</h1>
-        <form method="POST" action="{{ url_for('menu_usuario') }}">
-            <div class="form-group">
-                <label for="cpf">Digite o CPF do Funcionário:</label>
-                <input type="text" id="cpf" name="cpf" placeholder="123.456.789-00" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" required>
+    <div class="hero">
+        <div class="content">
+            <h1>Menu do Usuário</h1>
+            <div class="button_topbar">
+                <form method="POST" action="{{ url_for('menu_usuario') }}">
+                <div class="form-group">
+                    <label for="cpf">Digite o CPF do Funcionário:</label>
+                    <input type="text" id="cpf" name="cpf" placeholder="123.456.789-00" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" required>
+                </div>
+                <button type="submit" class="button">Pesquisar</button>
+                </form>
+
+                <a href="{{ url_for('home') }}" class="button">Voltar ao Menu Principal</a>
             </div>
-            <button type="submit" class="button">Pesquisar</button>
-        </form>
-        <a href="{{ url_for('home') }}" class="button">Voltar ao Menu Principal</a>
+        </div>
     </div>
 </body>
 </html>

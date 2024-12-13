@@ -4,16 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INSS - Menu Principal</title>
+    <title>INSS</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='interface.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Bem-vindo ao Sistema INSS</h1>
-        <div class="menu">
-            <a href="{{ url_for('menu_usuario') }}" class="button">Entrar como Usuário</a>
-            <a href="{{ url_for('menu_adm') }}" class="button">Entrar como Administrador</a>
-            <a href="{{ url_for('sair') }}" class="button">Sair</a>
+    <div class="hero">
+        <div class="content">
+            <h1>Meu INSS</h1>
+            <p>Deseja prosseguir como:</p>
+            <div class="button_topbar">
+                <a href="{{ url_for('menu_usuario') }}" class="button">Usuário</a>
+                <a href="{{ url_for('menu_adm') }}" class="button">Administrador</a>
+            </div>
+            <p>Termo de Uso e Aviso de Privacidade</p>
         </div>
     </div>
 </body>

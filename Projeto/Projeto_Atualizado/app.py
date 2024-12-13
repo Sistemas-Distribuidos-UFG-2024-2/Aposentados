@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 import asyncio
 import json
 from client import empacotar_funcionario
@@ -37,6 +37,10 @@ async def tcp_client(request_data, service_name, retries=3):
             else:
                 return "Falha na conexão com o servidor após várias tentativas."
 
+# Rota para servir a pasta 'image'
+@app.route('/image/<path:filename>')
+def serve_image(filename):
+    return send_from_directory('image', filename)
 
 # Rota principal do menu inicial
 @app.route('/')
@@ -120,13 +124,6 @@ def menu_adm():
         return render_template('resultado.html', response=response_dict)
 
     return render_template('menu_adm.html')
-
-
-# Rota para sair
-@app.route('/sair')
-def sair():
-    return redirect(url_for('home'))
-
 
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=8081)

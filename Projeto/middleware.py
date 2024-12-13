@@ -4,7 +4,9 @@ import json
 
 NOME_SERVICE_IP = "127.0.0.1"
 NOME_SERVICE_PORT_REGISTER = 9000 
-NOME_SERVICE_PORT_QUERY = 9001  
+NOME_SERVICE_PORT_QUERY = 9001
+SAUDE_SERVICE_PORT = 9090
+LOAD_BALANCER_PORT = 9091
 
 async def register_with_name_service(service_name, server_ip, server_port):
     try:
@@ -48,34 +50,36 @@ async def query_name_service(service_name):
 #for service, servers in service_names.items():
 #    current_server_index[service] = 0
 
-async def check_server_health_remote(server_ip, server_port):
+# Função para obter servidores saudáveis a partir do serviço de saúde
+async def update_healthy_servers():
     try:
-        reader, writer = await asyncio.open_connection('127.0.0.1', 9090)  # IP e porta do servidor de saúde
-
-        request = {"server_ip": server_ip, "server_port": server_port}
-        writer.write(json.dumps(request).encode())
+        reader, writer = await asyncio.open_connection('127.0.0.1', SAUDE_SERVICE_PORT)
+        writer.write(b"health_check")
         await writer.drain()
 
         response_data = await reader.read(1024)
         response = json.loads(response_data.decode())
-
         writer.close()
         await writer.wait_closed()
 
-        if response.get("status") == "ok":
-            return True
+        if "servers" in response:
+            return response["servers"]  # Retorna a lista de servidores saudáveis
         else:
-            print(f"Falha ao verificar saúde do servidor: {response.get('error')}")
-            return False
+            print("Erro: resposta inesperada do serviço de saúde")
+            return []
     except Exception as e:
-        print(f"Erro ao conectar ao servidor de saúde: {e}")
-        return False
+        print(f"Erro ao conectar ao serviço de saúde: {e}")
+        return []
 
-async def get_next_server_remote(service_name):
+# Função para consultar o load balancer e obter o próximo servidor
+async def get_next_server_from_loadbalancer(service_name, healthy_servers):
     try:
-        reader, writer = await asyncio.open_connection('127.0.0.1', 9091)  # IP e porta do servidor de loadbalancer
-
-        request = {"service_name": service_name}
+        reader, writer = await asyncio.open_connection('127.0.0.1', LOAD_BALANCER_PORT)
+        request = {
+            "action": "get_next_server",
+            "service_name": service_name,
+            "healthy_servers": healthy_servers
+        }
         writer.write(json.dumps(request).encode())
         await writer.drain()
 
@@ -88,29 +92,39 @@ async def get_next_server_remote(service_name):
         if "server_ip" in response and "server_port" in response:
             return response["server_ip"], response["server_port"]
         else:
-            print(f"Erro ao obter próximo servidor: {response.get('error')}")
+            print(f"Erro ao obter próximo servidor do load balancer: {response.get('error')}")
             return None, None
     except Exception as e:
-        print(f"Erro ao conectar ao servidor de seleção: {e}")
+        print(f"Erro ao conectar ao load balancer: {e}")
         return None, None
 
-# Outras partes do middleware permanecem iguais...
 async def handle_client(reader, writer):
     print("Conexão recebida")
 
-    # Recebendo o nome do serviço solicitado
+    # Recebe o nome do serviço solicitado
     data = await reader.read(1024)
     service_name = data.decode().strip()
 
-    server_ip, server_port = await get_next_server_remote(service_name)
+    # Obtém a lista de servidores saudáveis
+    healthy_servers = await update_healthy_servers()
+
+    if not healthy_servers:
+        writer.write("Nenhum servidor saudável disponível para o serviço solicitado.\n".encode())
+        await writer.drain()
+        writer.close()
+        return
+
+    # Consulta o load balancer para o próximo servidor
+    server_ip, server_port = await get_next_server_from_loadbalancer(service_name, healthy_servers)
 
     if server_ip is None:
-        writer.write("Nenhum servidor disponível para o serviço solicitado.\n".encode())
+        writer.write("Erro ao obter servidor do load balancer.\n".encode())
         await writer.drain()
         writer.close()
         return
 
     try:
+        # Conecta ao servidor selecionado
         server_reader, server_writer = await asyncio.open_connection(server_ip, server_port)
         print(f"Conectado ao servidor {server_ip}:{server_port}")
 

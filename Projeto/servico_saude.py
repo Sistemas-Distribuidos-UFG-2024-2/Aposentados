@@ -1,55 +1,39 @@
-# server_health_server.py
-
+# servico_saude.py
 import asyncio
 import json
 
-server_failures = {}
-MAX_FAILURES = 3
-COOL_DOWN = 60  # Segundos para cooldown
+SERVERS = [("127.0.0.1", 5005), ("127.0.0.1", 5006)]  # Lista inicial de servidores
 
-async def checar_saude_servidor(server_ip, server_port):
-    server = (server_ip, server_port)
-    if server_failures.get(server, 0) >= MAX_FAILURES:
-        print(f"Servidor {server_ip}:{server_port} em cooldown.")
-        await asyncio.sleep(COOL_DOWN)
-        server_failures[server] = 0
-
+async def check_server_health(server_ip, server_port):
+    # Simulação de checagem de saúde (implementação real pode variar)
     try:
         reader, writer = await asyncio.open_connection(server_ip, server_port)
         writer.close()
         await writer.wait_closed()
-        server_failures[server] = 0
-        return {"status": "ok"}
-    except Exception as e:
-        print(f"Servidor {server_ip}:{server_port} indisponível - {e}")
-        server_failures[server] = server_failures.get(server, 0) + 1
-        return {"status": "unavailable", "error": str(e)}
+        return True
+    except Exception:
+        return False
 
-async def handle_client(reader, writer):
-    try:
-        data = await reader.read(1024)
-        request = json.loads(data.decode())
+async def get_healthy_servers():
+    healthy_servers = []
+    for ip, port in SERVERS:
+        is_healthy = await check_server_health(ip, port)
+        if is_healthy:
+            healthy_servers.append((ip, port))
+    return healthy_servers
 
-        server_ip = request.get("server_ip")
-        server_port = request.get("server_port")
-        if not server_ip or not server_port:
-            response = {"error": "Parâmetros inválidos"}
-        else:
-            response = await checar_saude_servidor(server_ip, server_port)
-
-        writer.write(json.dumps(response).encode())
-        await writer.drain()
-    except Exception as e:
-        writer.write(json.dumps({"error": str(e)}).encode())
-        await writer.drain()
-    finally:
-        writer.close()
+async def handle_health_check_request(reader, writer):
+    healthy_servers = await get_healthy_servers()
+    response = json.dumps({"servers": healthy_servers})
+    writer.write(response.encode())
+    await writer.drain()
+    writer.close()
 
 async def main():
-    server = await asyncio.start_server(handle_client, '0.0.0.0', 9090)
-    print("Servidor de saúde rodando em 0.0.0.0:9090")
+    server = await asyncio.start_server(handle_health_check_request, '0.0.0.0', 9090)
+    print("Serviço de Saúde rodando em 0.0.0.0:9090")
     async with server:
         await server.serve_forever()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     asyncio.run(main())

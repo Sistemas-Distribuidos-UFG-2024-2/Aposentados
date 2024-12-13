@@ -1,8 +1,8 @@
 {
     "Aposentado1": {
         "nome": "Joao Silva",
-        "idade": "77",
-        "tempoDeTrabalho": "60",
+        "idade": 77,
+        "tempoDeTrabalho": 60,
         "cargo": "Desenvolvedor",
         "cpf": "123.132.132-77",
         "salario": 5000,
@@ -10,8 +10,8 @@
     },
     "Aposentado2": {
         "nome": "Batista",
-        "idade": "77",
-        "tempoDeTrabalho": "60",
+        "idade": 77,
+        "tempoDeTrabalho": 60,
         "cargo": "Desenvolvedor",
         "cpf": "123.132.132-77",
         "salario": 5000,

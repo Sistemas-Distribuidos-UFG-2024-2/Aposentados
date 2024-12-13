@@ -1,5 +1,4 @@
 # middleware.py
-
 import asyncio
 import json
 
@@ -74,7 +73,7 @@ async def check_server_health_remote(server_ip, server_port):
 
 async def get_next_server_remote(service_name):
     try:
-        reader, writer = await asyncio.open_connection('127.0.0.1', 9091)  # IP e porta do servidor de seleção
+        reader, writer = await asyncio.open_connection('127.0.0.1', 9091)  # IP e porta do servidor de loadbalancer
 
         request = {"service_name": service_name}
         writer.write(json.dumps(request).encode())

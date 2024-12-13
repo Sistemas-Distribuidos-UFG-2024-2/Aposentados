@@ -9,7 +9,7 @@ from datetime import datetime
 MIDDLEWARE_IP = "127.0.0.1"
 MIDDLEWARE_REGISTRATION_PORT = 9000 # Porta do Serviço de Nomes
 
-#Registro no middleware
+# Registro no middleware
 async def register_with_middleware(service_name, server_ip, server_port):
     try:
         reader, writer = await asyncio.open_connection(MIDDLEWARE_IP, MIDDLEWARE_REGISTRATION_PORT)
@@ -55,11 +55,11 @@ def save_registry():
         json.dump(registro, f, indent=4)
 
 # Função que executa a verificação de registros a cada 60 segundos
-def checagem_temporaria(interval=60):
+"""def checagem_temporaria(interval=60):
     while True:
         for ip, port in LISTA_SERVIDORES_REGISTRADORES:
             checagem_de_registro(ip, port)
-        time.sleep(interval)
+        time.sleep(interval)"""
 
 
 def merge_registros(registro1, registro2):
@@ -97,10 +97,27 @@ def merge_registros(registro1, registro2):
     
     return novo_registro
 
-
+# Critérios de aposentadoria
+IDADE_MINIMA = 60  # Idade mínima para aposentadoria
+TEMPO_CONTRIBUICAO_MINIMO = 35  # Tempo mínimo de contribuição em anos
 
 # Inicializa a tabela de clientes com os registros salvos
 registro = load_registry()
+
+def verificar_aposentadoria(funcionario):
+    idade = funcionario.get("idade", 0)
+    tempo_trabalhado = funcionario.get("tempoDeTrabalho")
+
+    print(idade)
+    print(tempo_trabalhado)
+
+    if idade >= 60 and tempo_trabalhado >= 35:
+        return True, "O usuario pode se aposentar."
+    elif idade < 60:
+        return False, f"O usuario nao atingiu a idade minima de {60} anos."
+    else:
+        return False, f"O usuario nao possui o tempo de contribuicao minimo de {35} anos."
+
 
 def handle_client(conn, addr):
     global registro
@@ -110,15 +127,32 @@ def handle_client(conn, addr):
             message = conn.recv(4096).decode()
             if not message:
                 break
-            
+
             try:
                 # Tenta carregar a mensagem como JSON
                 request = json.loads(message)
                 operation = request.get("operation")  # Operação desejada
                 funcionario = request.get("funcionario")  # Dados do funcionário
 
-                # Verifica qual operação foi solicitada
-                if operation == "CADASTRAR_FUNCIONARIO":
+                if operation == "PESQUISAR_FUNCIONARIO":
+                    cpf_solicitado = funcionario.get("cpf")
+                    funcionario_encontrado = next(
+                        (func for func in registro.values() if func["cpf"] == cpf_solicitado), 
+                        None
+                    )
+
+                    if funcionario_encontrado:
+                        mensagem = verificar_aposentadoria(funcionario_encontrado)
+                        resposta = {
+                            "nome": funcionario.get("nome"),
+                            "cpf": cpf_solicitado,
+                            "mensagem": mensagem
+                        }
+                        conn.send(json.dumps(resposta).encode())
+                    else:
+                        conn.send("FUNCIONARIO_NAO_ENCONTRADO".encode())
+
+                elif operation == "CADASTRAR_FUNCIONARIO":
 
                     if funcionario:
                         # Verifica se o CPF do funcionário já existe
@@ -140,72 +174,22 @@ def handle_client(conn, addr):
                             conn.send(f"{identifier}_CADASTRADO".encode())
                     else:
                         conn.send("DADOS_FUNCIONARIO_INVALIDOS".encode())
-                
-                elif operation == "PESQUISAR_FUNCIONARIO":
-
-                    if funcionario:
-                        # Verifica se o CPF do funcionário já existe
-                        cpf_existente = any(func["cpf"] == funcionario["cpf"] for func in registro.values())
-                        
-                        if cpf_existente:
-                            conn.send("Valido".encode())
-                        else:
-                            conn.send("NÃO_ENCONTRADO".encode())
-                    else:
-                        conn.send("DADOS_FUNCIONARIO_INVALIDOS".encode())
-                
-                elif operation == "GET_FUNCIONARIO":
-                    if funcionario:
-                        # Obtém o CPF do funcionário solicitado
-                        cpf_solicitado = funcionario.get("cpf")
-
-                        # Procura o funcionário pelo CPF no registro
-                        funcionario_encontrado = next(
-                            (func for func in registro.values() if func["cpf"] == cpf_solicitado), None
-                        )
-
-                        if funcionario_encontrado:
-                            # Remove o campo 'data_hora_cadastro' antes de enviar
-                            funcionario_sem_data = {k: v for k, v in funcionario_encontrado.items() if k != "data_hora_cadastro"}
-                            conn.send(json.dumps(funcionario_sem_data).encode())
-                        else:
-                            conn.send("FUNCIONARIO_NAO_ENCONTRADO".encode()) #Envia todos os dados do funcionario
-                    else:
-                        conn.send("DADOS_FUNCIONARIO_INVALIDOS".encode())
-
 
                 elif operation == "ENVIAR_REGISTRO":
-
-                    # Envia o conteúdo do arquivo de registros como JSON
                     conn.send(json.dumps(registro).encode())
-                
-                elif operation == "REGISTROS_IGUAIS":
-                    print(f"Registros Iguais entre esse servidor e o {addr}")
 
                 elif operation == "ORDEM_DE_ATUALIZACAO":
-
-                    # Substitui o registro atual pelo novo registro recebido somente se forem diferentes
-
                     novo_registro = request.get("registro")
-                    if novo_registro:
+                    if novo_registro and novo_registro != registro:
+                        registro = merge_registros(registro, novo_registro)
+                        save_registry()
+                        print(f"Registro atualizado do servidor {addr}")
+                    conn.send("REGISTRO_ATUALIZADO".encode())
 
-                        # Verifica se os registros são diferentes antes de atualizar
-                        if novo_registro != registro:
-                            registro = novo_registro
-                            save_registry()
-                            print(f"Registro atualizado com sucesso a partir da ordem de atualização do servidor {addr}")
-                        else:
-                            print(f"Registro não atualizado, pois já está sincronizado com o servidor {addr}")
-
-                    else:
-                        conn.send("DADOS_REGISTRO_INVALIDOS".encode())
-                
                 else:
-                    # Operação desconhecida
                     conn.send("OPERACAO_DESCONHECIDA".encode())
 
             except json.JSONDecodeError:
-                # Mensagem não estava em formato JSON
                 conn.send("FORMATO_INVALIDO".encode())
 
         except Exception as e:
@@ -213,7 +197,6 @@ def handle_client(conn, addr):
             break
 
     conn.close()
-
 
 def start_server():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -227,9 +210,8 @@ def start_server():
         thread = threading.Thread(target=handle_client, args=(conn, addr))
         thread.start()
 
-
 # Função para verificar registros entre servidores
-def checagem_de_registro(IP, Porta):
+def checagem_de_registro(IP, Porta):    
     global registro
     try:
         # Conecta ao outro servidor
@@ -267,11 +249,9 @@ def checagem_de_registro(IP, Porta):
     except Exception as e:
         print(f"Erro ao conectar ao servidor {IP}:{Porta} - {e}")
 
-
-
 # Inicia o servidor e a verificação 
 if __name__ == "__main__":
-    service_name = "servidor_registrador"
+    service_name = "servidor"
     server_ip = "127.0.0.1"
     server_port = 5005
     
@@ -282,6 +262,6 @@ if __name__ == "__main__":
     server_thread.start()
     
     # Inicia a verificação  com todos os servidores
-    check_thread = threading.Thread(target=checagem_temporaria)
-    check_thread.daemon = True  # Torna a thread um daemon, ou seja, termina quando o processo principal encerrar
-    check_thread.start()
+    #check_thread = threading.Thread(target=checagem_temporaria)
+    #check_thread.daemon = True  # Torna a thread um daemon, ou seja, termina quando o processo principal encerrar
+    #check_thread.start()

@@ -4,9 +4,7 @@ import asyncio
 import json
 
 service_names = {
-    "servidor_principal": [("127.0.0.1", 9001), ("127.0.0.1", 9002)],
-    "servidor_backup": [("127.0.0.1", 9003)],
-    "servidor_registrador": [("127.0.0.1", 5005), ("127.0.0.1", 5006)]
+    "servidor": [("127.0.0.1", 5005), ("127.0.0.1", 5006)]
 }
 
 current_server_index = {service: 0 for service in service_names}

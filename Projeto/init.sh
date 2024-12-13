@@ -7,18 +7,19 @@ scripts=(
     "middleware.py"
     "servico_nomes.py"
     "servidor.py"
-    "client.py"
+    "app.py"
 )
 
 # Caminho para o interpretador Python (ajuste se necessário)
-python_cmd="python"
+python_cmd="python3"  # Assumindo que Python 3 é o padrão
 
 echo "Iniciando scripts..."
 
+# Loop para executar cada script
 for script in "${scripts[@]}"; do
     echo "Abrindo terminal para: $script"
-    # Use o comando 'cmd.exe' com argumentos completos para evitar problemas de execução
-    cmd.exe /c start "Executando $script" $python_cmd $script
+    # Executa o script em um novo terminal
+    gnome-terminal -- bash -c "$python_cmd $script; exec bash"
     sleep 1 # Pausa de 1 segundo para evitar sobreposição
 done
 

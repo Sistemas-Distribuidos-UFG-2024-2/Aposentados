@@ -79,7 +79,8 @@ body {
     right: 10%;
     transform: translateY(-50%);
     width: 450px;
-    height: 70vh;
+    max-height: 70vh; /* Limita a altura máxima */
+    overflow-y: auto; /* Adiciona barra de rolagem quando necessário */
     background-color: #fff;
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -90,6 +91,7 @@ body {
     gap: 20px;
     justify-content: space-between;
 }
+
 
 /* Alinhamento do h1 no topo */
 .content h1 {
@@ -125,7 +127,8 @@ label {
     margin-bottom: 10px;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="number"]{
     width: 100%;
     padding: 10px 15px;
     font-size: 1rem;
@@ -137,7 +140,8 @@ input[type="text"] {
     transition: border-color 0.3s ease;
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+input[type="number"]:focus {
     border-color: var(--azul_escuro);
     outline: none;
     box-shadow: 0 0 8px rgba(15, 112, 178, 0.5);
@@ -180,3 +184,68 @@ a.button:hover {
     background-color: var(--azul_claro);
 }
 
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--azul_claro);
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+a.button {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    text-decoration: none;
+}
+
+/* Garante que os campos no formulário não ultrapassem o container */
+#cadastro-fields {
+    display: none; /* Mantém oculto por padrão */
+    flex-direction: column;
+    gap: 15px; /* Espaçamento entre os campos */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input, select {
+    max-width: 100%; /* Garante que não ultrapassem o container */
+    box-sizing: border-box; /* Inclui padding e borda no cálculo do tamanho */
+}

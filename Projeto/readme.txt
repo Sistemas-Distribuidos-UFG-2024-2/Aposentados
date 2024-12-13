@@ -1,4 +1,4 @@
-##Para rodar o código:##
+Para rodar o código:
 
 inicie o loadbalancer.py
 inicie o servico_saude.py

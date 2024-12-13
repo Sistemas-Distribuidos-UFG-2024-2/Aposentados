@@ -1,8 +1,10 @@
 Para rodar o código:
 
-inicie o loadbalancer.py
-inicie o servico_saude.py
-inicie o middleware.py
-inicie o servico_nomes.py
-inicie o servidor.py (ou suas cópias)
-inicie o client.py
+Execute o arquivo "init.bat" no windows, caso voce esteja no linux, execute os arquivos na seguinte ordem
+
+- loadbalancer.py
+- servico_saude.py
+- middleware.py
+- servico_nomes.py
+- servidor.py (ou suas cópias)
+- client.py

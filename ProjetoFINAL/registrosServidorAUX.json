@@ -1,0 +1,110 @@
+{
+    "Funcionario9": {
+        "nome": "Fabio Almeida",
+        "idade": 65,
+        "tempoDeTrabalho": 40,
+        "cargo": "Diretor de Operacoes",
+        "cpf": "654.987.321-88",
+        "salario": 20000,
+        "data_hora_cadastro": "2020-02-28 08:00:00"
+    },
+    "Funcionario5": {
+        "nome": "Paulo Souza",
+        "idade": 70,
+        "tempoDeTrabalho": 45,
+        "cargo": "Consultor Financeiro",
+        "cpf": "789.456.123-44",
+        "salario": 15500,
+        "data_hora_cadastro": "2022-05-25 09:10:05"
+    },
+    "Funcionario6": {
+        "nome": "Ana Ribeiro",
+        "idade": 29,
+        "tempoDeTrabalho": 5,
+        "cargo": "Auxiliar Administrativo",
+        "cpf": "654.321.987-55",
+        "salario": 2800,
+        "data_hora_cadastro": "2023-06-15 16:05:45"
+    },
+    "Funcionario10": {
+        "nome": "Camila Lopes",
+        "idade": 33,
+        "tempoDeTrabalho": 10,
+        "cargo": "Analista de RH",
+        "cpf": "321.654.987-99",
+        "salario": 5200,
+        "data_hora_cadastro": "2023-07-01 15:25:35"
+    },
+    "Funcionario8": {
+        "nome": "Beatriz Costa",
+        "idade": 40,
+        "tempoDeTrabalho": 18,
+        "cargo": "Especialista em Marketing",
+        "cpf": "987.654.123-77",
+        "salario": 6700,
+        "data_hora_cadastro": "2023-10-20 13:35:20"
+    },
+    "Funcionario3": {
+        "nome": "Carlos Andrade",
+        "idade": 45,
+        "tempoDeTrabalho": 20,
+        "cargo": "Desenvolvedor",
+        "cpf": "456.123.789-22",
+        "salario": 6000,
+        "data_hora_cadastro": "2023-11-15 14:20:10"
+    },
+    "Funcionario1": {
+        "nome": "Joao Silva",
+        "idade": 55,
+        "tempoDeTrabalho": 30,
+        "cargo": "Analista de Sistemas",
+        "cpf": "123.456.789-00",
+        "salario": 7500,
+        "data_hora_cadastro": "2023-12-01 10:15:30"
+    },
+    "Funcionario4": {
+        "nome": "Fernanda Santos",
+        "idade": 37,
+        "tempoDeTrabalho": 12,
+        "cargo": "Designer Grafico",
+        "cpf": "321.987.654-33",
+        "salario": 4500,
+        "data_hora_cadastro": "2023-12-05 11:30:50"
+    },
+    "Funcionario2": {
+        "nome": "Maria Oliveira",
+        "idade": 62,
+        "tempoDeTrabalho": 35,
+        "cargo": "Gerente de Projetos",
+        "cpf": "987.654.321-11",
+        "salario": 12500,
+        "data_hora_cadastro": "2024-01-10 08:45:00"
+    },
+    "Funcionario7": {
+        "nome": "Ricardo Lima",
+        "idade": 50,
+        "tempoDeTrabalho": 28,
+        "cargo": "Engenheiro de Software",
+        "cpf": "123.321.456-66",
+        "salario": 9000,
+        "data_hora_cadastro": "2024-03-12 12:00:00"
+    },
+    "Funcionario11": {
+        "nome": "Philippe Augusto Monteiro Silva",
+        "idade": "21",
+        "tempoDeTrabalho": "30",
+        "cargo": "Desenvolvedor",
+        "cpf": "704.431.351-50",
+        "salario": "5000.00",
+        "data_hora_cadastro": "2024-12-13 01:20:09"
+    },
+    "Funcionario12": {
+        "nome": "Qualqeurcoisa",
+        "idade": "99",
+        "tempoDeTrabalho": "60",
+        "cargo": "Desenvapfa",
+        "cpf": "111.111.111-77",
+        "salario": "6000",
+        "data_hora_cadastro": "2024-12-13 14:45:25"
+    }
+}

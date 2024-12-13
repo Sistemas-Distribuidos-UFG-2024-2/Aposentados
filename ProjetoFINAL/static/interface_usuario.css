@@ -1,0 +1,182 @@
+@import url('https://fonts.cdnfonts.com/css/rawline');
+
+/* Paleta de Cores */
+:root {
+    --azul_escuro: #0f70b2;
+    --amarelo: #fac40e;
+    --verde: #16a338;
+    --branco_gelo: #eeefed;
+    --azul_claro: #88bdc9;
+    --amarelo_claro: #f6e393;
+    --verde_claro: #68bf7c;
+}
+
+/* Reset básico */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilo do Body */
+body {
+    font-family: 'Rawline', sans-serif;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* Botões */
+.button {
+    display: inline-block;
+    padding: 15px 30px;
+    font-size: 1rem;
+    background-color: var(--azul_escuro);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.button:hover {
+    background-color: var(--azul_claro);
+    transform: scale(1.05);
+}
+
+/* Hero Section */
+.hero {
+    background-image: url('/image/idosos01.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* Adiciona um overlay escuro */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(14, 112, 178, 0.3), rgba(0, 0, 0, 0.8));
+    z-index: 0;
+}
+
+/* Conteúdo */
+.content {
+    position: fixed;
+    top: 50%;
+    right: 10%;
+    transform: translateY(-50%);
+    width: 450px;
+    height: 70vh;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    z-index: 1;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+/* Alinhamento do h1 no topo */
+.content h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: black;
+    align-self: center;
+}
+
+/* Botões centralizados no restante do espaço */
+
+.content .button_topbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+/* Estilo para o formulário */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 1rem;
+    color: black;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: 2px solid var(--azul_claro);
+    border-radius: 10px;
+    background-color: var(--branco_gelo);
+    color: var(--azul_escuro);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-color: var(--azul_escuro);
+    outline: none;
+    box-shadow: 0 0 8px rgba(15, 112, 178, 0.5);
+}
+
+/* Botão do formulário */
+.button-group {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.button-group .button {
+    background-color: var(--verde);
+    color: #fff;
+    width: auto;
+    padding: 10px 20px;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+}
+
+.button-group .button:hover {
+    background-color: var(--verde_claro);
+}
+
+/* Botão de voltar ao menu */
+a.button {
+    display: inline-block;
+    margin-top: 30px;
+    background-color: var(--azul_escuro);
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+a.button:hover {
+    background-color: var(--azul_claro);
+}
+

@@ -2,7 +2,7 @@
 import asyncio
 import json
 
-SERVERS = [("127.0.0.1", 5005), ("127.0.0.1", 5006), ("127.0.0.1", 5010), ("127.0.0.1", 5011)]  # Lista inicial de servidores
+SERVERS = [("127.0.0.1", 5005), ("127.0.0.1", 5006)]  # Lista inicial de servidores
 
 async def check_server_health(server_ip, server_port):
     # Simulação de checagem de saúde (implementação real pode variar)

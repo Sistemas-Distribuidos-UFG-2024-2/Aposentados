@@ -95,7 +95,7 @@ def menu_usuario():
                 "operation": "PESQUISAR_FUNCIONARIO",  # OPERAÇÃO QUE O SERVIDOR REGISTRADOR VAI REALIZAR
                 "funcionario": funcionario
             }
-            service_name = "servidorAux"
+            service_name = "servidor_registrador"
 
             asyncio.run(tcp_client(request, service_name))
 

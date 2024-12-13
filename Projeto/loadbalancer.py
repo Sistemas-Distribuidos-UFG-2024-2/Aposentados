@@ -36,6 +36,10 @@ async def get_next_server(service_name, healthy_servers):
     if service_name not in current_server_index:
         current_server_index[service_name] = 0
 
+    # Ajusta o índice se a lista de servidores mudou
+    if current_server_index[service_name] >= len(healthy_servers):
+        current_server_index[service_name] = 0
+
     # Aplica o Round Robin para escolher o servidor
     server_ip, server_port = healthy_servers[current_server_index[service_name]]
     current_server_index[service_name] = (current_server_index[service_name] + 1) % len(healthy_servers)

@@ -13,9 +13,7 @@ MIDDLEWARE_REGISTRATION_PORT = 9000 # Porta do Serviço de Nomes
 REGISTRY_FILE = "registrosServidor1.json"
 
 LISTA_SERVIDORES_REGISTRADORES = [
-    ("localhost", 5006),  # Lista de outros servidores registradores que possuem um arquivo de registro.
-    ("localhost", 5010),
-    ("localhost", 5011)
+    ("localhost", 5006)  # Lista de outros servidores registradores que possuem um arquivo de registro.
 ]
 
 # Critérios de aposentadoria
@@ -189,8 +187,6 @@ def handle_client(conn, addr):
                             save_registry()
                             
                             conn.send(f"{identifier} CADASTRADO".encode())
-
-                            Propagar()
                     else:
                         conn.send("Dados invalidos. Por favor, tente novamente".encode())
 
@@ -267,38 +263,6 @@ def checagem_de_registro(IP, Porta):
 
     except Exception as e:
         print(f"Erro ao conectar ao servidor {IP}:{Porta} - {e}")
-
-def Propagar():
-    """
-    Envia o registro atual para todos os servidores na LISTA_SERVIDORES_REGISTRADORES.
-    """
-    global registro
-
-    for ip, port in LISTA_SERVIDORES_REGISTRADORES:
-        try:
-            # Conecta ao outro servidor
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-                sock.connect((ip, port))
-
-                # Prepara a mensagem para enviar o registro
-                mensagem = {
-                    "operation": "ORDEM_DE_ATUALIZACAO",
-                    "registro": registro
-                }
-
-                # Envia a mensagem
-                sock.send(json.dumps(mensagem).encode())
-                print(f"Registro enviado para o servidor {ip}:{port}")
-
-                # Recebe a resposta
-                resposta = sock.recv(4096).decode()
-                if resposta == "REGISTRO_ATUALIZADO":
-                    print(f"Servidor {ip}:{port} confirmou a PROPAGACAO do registro.")
-                else:
-                    print(f"Resposta inesperada do servidor {ip}:{port}: {resposta}")
-
-        except Exception as e:
-            print(f"Erro ao conectar ou enviar registro para o servidor {ip}:{port} - {e}")
 
 # Inicia o servidor e a verificação 
 if __name__ == "__main__":

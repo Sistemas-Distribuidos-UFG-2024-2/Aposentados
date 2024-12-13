@@ -101,29 +101,29 @@ async def get_next_server_from_loadbalancer(service_name, healthy_servers):
 async def handle_client(reader, writer):
     print("Conexão recebida")
 
-    # Recebe o nome do serviço solicitado
-    data = await reader.read(1024)
-    service_name = data.decode().strip()
-
-    # Obtém a lista de servidores saudáveis
-    healthy_servers = await update_healthy_servers()
-
-    if not healthy_servers:
-        writer.write("Nenhum servidor saudável disponível para o serviço solicitado.\n".encode())
-        await writer.drain()
-        writer.close()
-        return
-
-    # Consulta o load balancer para o próximo servidor
-    server_ip, server_port = await get_next_server_from_loadbalancer(service_name, healthy_servers)
-
-    if server_ip is None:
-        writer.write("Erro ao obter servidor do load balancer.\n".encode())
-        await writer.drain()
-        writer.close()
-        return
-
     try:
+        # Recebe o nome do serviço solicitado
+        data = await reader.read(1024)
+        service_name = data.decode().strip()
+
+        # Obtém a lista de servidores saudáveis
+        healthy_servers = await update_healthy_servers()
+
+        if not healthy_servers:
+            writer.write("Nenhum servidor saudável disponível para o serviço solicitado.\n".encode())
+            await writer.drain()
+            writer.close()
+            return
+
+        # Consulta o load balancer para o próximo servidor
+        server_ip, server_port = await get_next_server_from_loadbalancer(service_name, healthy_servers)
+
+        if server_ip is None:
+            writer.write("Erro ao obter servidor do load balancer.\n".encode())
+            await writer.drain()
+            writer.close()
+            return
+
         # Conecta ao servidor selecionado
         server_reader, server_writer = await asyncio.open_connection(server_ip, server_port)
         print(f"Conectado ao servidor {server_ip}:{server_port}")
@@ -139,14 +139,17 @@ async def handle_client(reader, writer):
             if response:
                 writer.write(response)
                 await writer.drain()
+
     except Exception as e:
-        print(f"Erro ao conectar ao servidor {server_ip}:{server_port} - {e}")
-        writer.write("Erro ao se comunicar com o servidor.\n".encode())
+        print(f"Erro: {e}")
+        writer.write(f"Erro no middleware: {str(e)}\n".encode())
         await writer.drain()
+
     finally:
         writer.close()
         if 'server_writer' in locals():
             server_writer.close()
+
 
 async def main():
     server = await asyncio.start_server(handle_client, '0.0.0.0', 8080)

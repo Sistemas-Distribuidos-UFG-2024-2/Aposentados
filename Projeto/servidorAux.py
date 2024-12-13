@@ -10,11 +10,11 @@ MIDDLEWARE_IP = "127.0.0.1"
 MIDDLEWARE_REGISTRATION_PORT = 9000 # Porta do Serviço de Nomes
 
 # Arquivo de registros
-REGISTRY_FILE = "registrosServidor1.json"
+REGISTRY_FILE = "registrosServidorAUX.json"
 
 LISTA_SERVIDORES_REGISTRADORES = [
+    ("localhost", 5005),
     ("localhost", 5006),  # Lista de outros servidores registradores que possuem um arquivo de registro.
-    ("localhost", 5010),
     ("localhost", 5011)
 ]
 
@@ -171,28 +171,8 @@ def handle_client(conn, addr):
 
                 elif operation == "CADASTRAR_FUNCIONARIO":
 
-                    if funcionario:
-                        # Verifica se o CPF do funcionário já existe
-                        cpf_existente = any(func["cpf"] == funcionario["cpf"] for func in registro.values())
-                        
-                        if cpf_existente:
-                            conn.send("Funcionário já cadastrado".encode())
-                        else:
-                            # Define o identificador do funcionário automaticamente
-                            identifier = f"Funcionario{len(registro) + 1}"
-                            
-                            # Adiciona a data e hora do cadastro
-                            funcionario["data_hora_cadastro"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-                            # Armazena o funcionário no dicionário registro com o identificador automático
-                            registro[identifier] = funcionario
-                            save_registry()
-                            
-                            conn.send(f"{identifier} CADASTRADO".encode())
-
-                            Propagar()
-                    else:
-                        conn.send("Dados invalidos. Por favor, tente novamente".encode())
+                    conn.send("SERVIDOR AUXILIAR, NÃO POSSUI AUTORIDADE PARA ESCRITA.")
+                    print("SERVIDOR AUXILIAR, NÃO POSSUI AUTORIDADE PARA ESCRITA.")
 
                 elif operation == "ENVIAR_REGISTRO":
                     conn.send(json.dumps(registro).encode())
@@ -219,9 +199,9 @@ def handle_client(conn, addr):
 
 def start_server():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(("localhost", 5005))
+    server.bind(("localhost", 5010))
     server.listen()
-    print("Servidor iniciado em localhost:5005")
+    print("Servidor iniciado em localhost:5010")
 
     while True:
         conn, addr = server.accept()
@@ -300,11 +280,12 @@ def Propagar():
         except Exception as e:
             print(f"Erro ao conectar ou enviar registro para o servidor {ip}:{port} - {e}")
 
+
 # Inicia o servidor e a verificação 
 if __name__ == "__main__":
-    service_name = "servidor"
+    service_name = "servidorAux"
     server_ip = "127.0.0.1"
-    server_port = 5005
+    server_port = 5010
     
     asyncio.run(register_with_middleware(service_name, server_ip, server_port))
     

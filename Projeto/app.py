@@ -59,7 +59,7 @@ def menu_usuario():
             "operation": "PESQUISAR_FUNCIONARIO",
             "funcionario": funcionario
         }
-        service_name = "servidor"
+        service_name = "servidorAux"
 
         # Comunicação TCP
         response = asyncio.run(tcp_client(request_data, service_name))

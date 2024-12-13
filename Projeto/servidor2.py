@@ -10,10 +10,10 @@ MIDDLEWARE_IP = "127.0.0.1"
 MIDDLEWARE_REGISTRATION_PORT = 9000 # Porta do Serviço de Nomes
 
 # Arquivo de registros
-REGISTRY_FILE = "registrosServidor1.json"
+REGISTRY_FILE = "registrosServidor2.json"
 
 LISTA_SERVIDORES_REGISTRADORES = [
-    ("localhost", 5006),  # Lista de outros servidores registradores que possuem um arquivo de registro.
+    ("localhost", 5005),  # Lista de outros servidores registradores que possuem um arquivo de registro.
     ("localhost", 5010),
     ("localhost", 5011)
 ]
@@ -219,9 +219,9 @@ def handle_client(conn, addr):
 
 def start_server():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(("localhost", 5005))
+    server.bind(("localhost", 5006))
     server.listen()
-    print("Servidor iniciado em localhost:5005")
+    print("Servidor iniciado em localhost:5006")
 
     while True:
         conn, addr = server.accept()
@@ -304,7 +304,7 @@ def Propagar():
 if __name__ == "__main__":
     service_name = "servidor"
     server_ip = "127.0.0.1"
-    server_port = 5005
+    server_port = 5006
     
     asyncio.run(register_with_middleware(service_name, server_ip, server_port))
     

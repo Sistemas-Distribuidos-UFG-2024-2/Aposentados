@@ -10,30 +10,51 @@ MIDDLEWARE_IP = "127.0.0.1"
 MIDDLEWARE_REGISTRATION_PORT = 9000 # Porta do Serviço de Nomes
 
 # Registro no middleware
-async def register_with_middleware(service_name, server_ip, server_port):
-    try:
-        reader, writer = await asyncio.open_connection(MIDDLEWARE_IP, MIDDLEWARE_REGISTRATION_PORT)
+async def register_with_middleware(service_name, server_ip, server_port, retry_interval=5, max_retries=None):
+    """
+    Registra o servidor no middleware com retentativas automáticas.
 
-        # Dados do servidor a serem registrados
-        request = {
-            "service_name": service_name,
-            "server_ip": server_ip,
-            "server_port": server_port
-        }
+    Args:
+        service_name (str): Nome do serviço a ser registrado.
+        server_ip (str): IP do servidor.
+        server_port (int): Porta do servidor.
+        retry_interval (int): Intervalo em segundos entre as tentativas. Padrão é 5 segundos.
+        max_retries (int, optional): Número máximo de tentativas. None para tentativas infinitas.
+    """
+    retries = 0
 
-        # Envia os dados de registro
-        writer.write(json.dumps(request).encode())
-        await writer.drain()
+    while max_retries is None or retries < max_retries:
+        try:
+            reader, writer = await asyncio.open_connection(MIDDLEWARE_IP, MIDDLEWARE_REGISTRATION_PORT)
 
-        # Lê a resposta do middleware
-        response = await reader.read(1024)
-        print(f"Resposta do middleware: {response.decode()}")
+            # Dados do servidor a serem registrados
+            request = {
+                "service_name": service_name,
+                "server_ip": server_ip,
+                "server_port": server_port
+            }
 
-        writer.close()
-        await writer.wait_closed()
+            # Envia os dados de registro
+            writer.write(json.dumps(request).encode())
+            await writer.drain()
 
-    except Exception as e:
-        print(f"Erro ao registrar no middleware: {e}")
+            # Lê a resposta do middleware
+            response = await reader.read(1024)
+            print(f"Resposta do middleware: {response.decode()}")
+
+            writer.close()
+            await writer.wait_closed()
+
+            print("Registro no middleware concluído com sucesso.")
+            return  # Sai da função após o sucesso
+
+        except Exception as e:
+            retries += 1
+            print(f"Erro ao registrar no middleware: {e}. Tentativa {retries}. Retentando em {retry_interval} segundos...")
+            await asyncio.sleep(retry_interval)
+
+    print("Número máximo de tentativas atingido. Falha ao registrar no middleware.")
+
 
 # Arquivo de registros
 REGISTRY_FILE = "registrosServidor1.json"
@@ -41,6 +62,10 @@ REGISTRY_FILE = "registrosServidor1.json"
 LISTA_SERVIDORES_REGISTRADORES = [
     ("localhost", 5006)  # Lista de outros servidores registradores que possuem um arquivo de registro.
 ]
+
+# Critérios de aposentadoria
+IDADE_MINIMA = 60  # Idade mínima para aposentadoria
+TEMPO_CONTRIBUICAO_MINIMO = 35  # Tempo mínimo de contribuição em anos
 
 # Carrega os registros existentes, se houver
 def load_registry():
@@ -97,16 +122,13 @@ def merge_registros(registro1, registro2):
     
     return novo_registro
 
-# Critérios de aposentadoria
-IDADE_MINIMA = 60  # Idade mínima para aposentadoria
-TEMPO_CONTRIBUICAO_MINIMO = 35  # Tempo mínimo de contribuição em anos
 
 # Inicializa a tabela de clientes com os registros salvos
 registro = load_registry()
 
 def verificar_aposentadoria(funcionario):
-    idade = funcionario.get("idade", 0)
-    tempo_trabalhado = funcionario.get("tempoDeTrabalho")
+    idade = int(funcionario.get("idade", 0))
+    tempo_trabalhado = int(funcionario.get("tempoDeTrabalho"))
 
     if idade >= IDADE_MINIMA and tempo_trabalhado >= TEMPO_CONTRIBUICAO_MINIMO:
         return "O usuario pode se aposentar."
@@ -156,7 +178,7 @@ def handle_client(conn, addr):
                         cpf_existente = any(func["cpf"] == funcionario["cpf"] for func in registro.values())
                         
                         if cpf_existente:
-                            conn.send("Valido".encode())
+                            conn.send("Funcionário já cadastrado".encode())
                         else:
                             # Define o identificador do funcionário automaticamente
                             identifier = f"Funcionario{len(registro) + 1}"

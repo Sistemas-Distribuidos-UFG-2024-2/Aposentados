@@ -9,6 +9,17 @@ from datetime import datetime
 MIDDLEWARE_IP = "127.0.0.1"
 MIDDLEWARE_REGISTRATION_PORT = 9000 # Porta do Serviço de Nomes
 
+# Arquivo de registros
+REGISTRY_FILE = "registrosServidor1.json"
+
+LISTA_SERVIDORES_REGISTRADORES = [
+    ("localhost", 5006)  # Lista de outros servidores registradores que possuem um arquivo de registro.
+]
+
+# Critérios de aposentadoria
+IDADE_MINIMA = 60  # Idade mínima para aposentadoria
+TEMPO_CONTRIBUICAO_MINIMO = 35  # Tempo mínimo de contribuição em anos
+
 # Registro no middleware
 async def register_with_middleware(service_name, server_ip, server_port, retry_interval=5, max_retries=None):
     """
@@ -55,18 +66,6 @@ async def register_with_middleware(service_name, server_ip, server_port, retry_i
 
     print("Número máximo de tentativas atingido. Falha ao registrar no middleware.")
 
-
-# Arquivo de registros
-REGISTRY_FILE = "registrosServidor1.json"
-
-LISTA_SERVIDORES_REGISTRADORES = [
-    ("localhost", 5006)  # Lista de outros servidores registradores que possuem um arquivo de registro.
-]
-
-# Critérios de aposentadoria
-IDADE_MINIMA = 60  # Idade mínima para aposentadoria
-TEMPO_CONTRIBUICAO_MINIMO = 35  # Tempo mínimo de contribuição em anos
-
 # Carrega os registros existentes, se houver
 def load_registry():
     if os.path.exists(REGISTRY_FILE):
@@ -85,7 +84,6 @@ def checagem_temporaria(interval=60):
         for ip, port in LISTA_SERVIDORES_REGISTRADORES:
             checagem_de_registro(ip, port)
         time.sleep(interval)
-
 
 def merge_registros(registro1, registro2):
     # Converte registros em listas de funcionários com identificadores
@@ -122,7 +120,6 @@ def merge_registros(registro1, registro2):
     
     return novo_registro
 
-
 # Inicializa a tabela de clientes com os registros salvos
 registro = load_registry()
 
@@ -136,7 +133,6 @@ def verificar_aposentadoria(funcionario):
         return f"O usuario nao atingiu a idade minima de {IDADE_MINIMA} anos."
     else:
         return f"O usuario nao possui o tempo de contribuicao minimo de {TEMPO_CONTRIBUICAO_MINIMO} anos."
-
 
 def handle_client(conn, addr):
     global registro

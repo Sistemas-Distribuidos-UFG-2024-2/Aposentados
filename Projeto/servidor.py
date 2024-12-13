@@ -55,11 +55,11 @@ def save_registry():
         json.dump(registro, f, indent=4)
 
 # Função que executa a verificação de registros a cada 60 segundos
-"""def checagem_temporaria(interval=60):
+def checagem_temporaria(interval=60):
     while True:
         for ip, port in LISTA_SERVIDORES_REGISTRADORES:
             checagem_de_registro(ip, port)
-        time.sleep(interval)"""
+        time.sleep(interval)
 
 
 def merge_registros(registro1, registro2):
@@ -108,15 +108,12 @@ def verificar_aposentadoria(funcionario):
     idade = funcionario.get("idade", 0)
     tempo_trabalhado = funcionario.get("tempoDeTrabalho")
 
-    print(idade)
-    print(tempo_trabalhado)
-
-    if idade >= 60 and tempo_trabalhado >= 35:
-        return True, "O usuario pode se aposentar."
-    elif idade < 60:
-        return False, f"O usuario nao atingiu a idade minima de {60} anos."
+    if idade >= IDADE_MINIMA and tempo_trabalhado >= TEMPO_CONTRIBUICAO_MINIMO:
+        return "O usuario pode se aposentar."
+    elif idade < IDADE_MINIMA:
+        return f"O usuario nao atingiu a idade minima de {IDADE_MINIMA} anos."
     else:
-        return False, f"O usuario nao possui o tempo de contribuicao minimo de {35} anos."
+        return f"O usuario nao possui o tempo de contribuicao minimo de {TEMPO_CONTRIBUICAO_MINIMO} anos."
 
 
 def handle_client(conn, addr):
@@ -144,13 +141,13 @@ def handle_client(conn, addr):
                     if funcionario_encontrado:
                         mensagem = verificar_aposentadoria(funcionario_encontrado)
                         resposta = {
-                            "nome": funcionario.get("nome"),
-                            "cpf": cpf_solicitado,
-                            "mensagem": mensagem
+                            "Nome": funcionario_encontrado.get("nome"),
+                            "CPF": cpf_solicitado,
+                            "Mensagem": mensagem
                         }
                         conn.send(json.dumps(resposta).encode())
                     else:
-                        conn.send("FUNCIONARIO_NAO_ENCONTRADO".encode())
+                        conn.send("Nenhum funcionario encontrado para este CPF".encode())
 
                 elif operation == "CADASTRAR_FUNCIONARIO":
 
@@ -162,7 +159,7 @@ def handle_client(conn, addr):
                             conn.send("Valido".encode())
                         else:
                             # Define o identificador do funcionário automaticamente
-                            identifier = f"Aposentado{len(registro) + 1}"
+                            identifier = f"Funcionario{len(registro) + 1}"
                             
                             # Adiciona a data e hora do cadastro
                             funcionario["data_hora_cadastro"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -171,9 +168,9 @@ def handle_client(conn, addr):
                             registro[identifier] = funcionario
                             save_registry()
                             
-                            conn.send(f"{identifier}_CADASTRADO".encode())
+                            conn.send(f"{identifier} CADASTRADO".encode())
                     else:
-                        conn.send("DADOS_FUNCIONARIO_INVALIDOS".encode())
+                        conn.send("Dados invalidos. Por favor, tente novamente".encode())
 
                 elif operation == "ENVIAR_REGISTRO":
                     conn.send(json.dumps(registro).encode())
@@ -262,6 +259,6 @@ if __name__ == "__main__":
     server_thread.start()
     
     # Inicia a verificação  com todos os servidores
-    #check_thread = threading.Thread(target=checagem_temporaria)
-    #check_thread.daemon = True  # Torna a thread um daemon, ou seja, termina quando o processo principal encerrar
-    #check_thread.start()
+    check_thread = threading.Thread(target=checagem_temporaria)
+    check_thread.daemon = True  # Torna a thread um daemon, ou seja, termina quando o processo principal encerrar
+    check_thread.start()

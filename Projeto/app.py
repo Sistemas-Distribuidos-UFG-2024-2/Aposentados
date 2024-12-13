@@ -59,7 +59,7 @@ def menu_usuario():
             "operation": "PESQUISAR_FUNCIONARIO",
             "funcionario": funcionario
         }
-        service_name = "servidor_registrador"
+        service_name = "servidor"
 
         # Comunicação TCP
         response = asyncio.run(tcp_client(request_data, service_name))
@@ -84,13 +84,13 @@ def menu_usuario():
 def menu_adm():
     if request.method == 'POST':
         operation = request.form.get('operation')
-        service_name = "servidor_registrador"
+        service_name = "servidor"
 
         if operation == "pesquisar":
             cpf = request.form.get('cpf')
             funcionario = empacotar_funcionario(cpf=cpf)
             request_data = {
-                "operation": "GET_FUNCIONARIO",
+                "operation": "PESQUISAR_FUNCIONARIO",
                 "funcionario": funcionario
             }
         elif operation == "cadastrar":

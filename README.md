@@ -18,7 +18,6 @@ Construiremos esse projeto com o fim de aplicar conceitos teóricos aprendidos e
 
 - **Cálculo de aposentadoria**: O sistema realiza cálculos de aposentadoria de acordo com as regras fornecidas.
 - **Solução distribuída**: O cálculo e armazenamento dos dados são distribuídos entre os nós da rede usando P2P.
-- **Armazenamento em Cloud**: Os dados críticos são armazenados na nuvem para garantir persistência e acessibilidade.
 - **Alta disponibilidade**: O sistema foi projetado para garantir alta disponibilidade e tolerância a falhas.
 - **Escalabilidade**: Capacidade de escalar tanto horizontal quanto verticalmente para suportar grandes volumes de dados.
 
@@ -26,14 +25,11 @@ Construiremos esse projeto com o fim de aplicar conceitos teóricos aprendidos e
 
 O sistema será desenvolvido utilizando uma arquitetura distribuída baseada em:
 
-- **Peer-to-Peer (P2P)**: Utilizando uma rede P2P para compartilhar o processamento dos cálculos entre os usuários do sistema.
-- **Cloud Computing**: A camada de armazenamento é suportada por uma solução de nuvem que garante a persistência dos dados de cálculo e registros de usuários.
+- **Cliente-Servidor**.
+- **Microsserviços**: A arquitetura do middleware está dividida em vários serviços, serviços estes que serão espalhados na rede, ficando em cada edge point (cliente).
 
 ## Tecnologias a serem Utilizadas
 
 - **Linguagem**: [Python]
-- **Framework de Comunicação**: [gRPC/RabbitMQ/ZeroMQ]
-- **Banco de Dados na Nuvem**: [Firebase/AWS S3/Azure Blob Storage]
-- **Plataforma de Nuvem**: [AWS/Azure/Google Cloud]
-- **Ferramenta de Coordenação P2P**: [Chord/Kademlia]
+- **Framework de Comunicação**: [HTTP, TCP, Socket]
 - **Ferramenta de Controle de Versão**: GitHub

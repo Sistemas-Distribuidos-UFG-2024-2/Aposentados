@@ -3,43 +3,14 @@ import threading
 import json
 import os
 import time
-import asyncio
 from datetime import datetime
 
-MIDDLEWARE_IP = "127.0.0.1"
-MIDDLEWARE_REGISTRATION_PORT = 9000 # Porta do Serviço de Nomes
-
-#Registro no middleware
-async def register_with_middleware(service_name, server_ip, server_port):
-    try:
-        reader, writer = await asyncio.open_connection(MIDDLEWARE_IP, MIDDLEWARE_REGISTRATION_PORT)
-
-        # Dados do servidor a serem registrados
-        request = {
-            "service_name": service_name,
-            "server_ip": server_ip,
-            "server_port": server_port
-        }
-
-        # Envia os dados de registro
-        writer.write(json.dumps(request).encode())
-        await writer.drain()
-
-        # Lê a resposta do middleware
-        response = await reader.read(1024)
-        print(f"Resposta do middleware: {response.decode()}")
-
-        writer.close()
-        await writer.wait_closed()
-
-    except Exception as e:
-        print(f"Erro ao registrar no middleware: {e}")
 
 # Arquivo de registros
-REGISTRY_FILE = "registrosServidor1.json"
+REGISTRY_FILE = "registrosServidorAUX1.json"
 
 LISTA_SERVIDORES_REGISTRADORES = [
-    ("localhost", 5006)  # Lista de outros servidores registradores que possuem um arquivo de registro.
+    ("localhost", 5005)  # Lista de outros servidores registradores que possuem um arquivo de registro.
 ]
 
 # Carrega os registros existentes, se houver
@@ -96,8 +67,7 @@ def merge_registros(registro1, registro2):
     novo_registro = {funcionario.pop("id"): {**funcionario, "data_hora_cadastro": funcionario["data_hora_cadastro"].strftime("%Y-%m-%d %H:%M:%S")} for funcionario in funcionarios}
     
     return novo_registro
-
-
+    
 
 # Inicializa a tabela de clientes com os registros salvos
 registro = load_registry()
@@ -120,26 +90,9 @@ def handle_client(conn, addr):
                 # Verifica qual operação foi solicitada
                 if operation == "CADASTRAR_FUNCIONARIO":
 
-                    if funcionario:
-                        # Verifica se o CPF do funcionário já existe
-                        cpf_existente = any(func["cpf"] == funcionario["cpf"] for func in registro.values())
-                        
-                        if cpf_existente:
-                            conn.send("Valido".encode())
-                        else:
-                            # Define o identificador do funcionário automaticamente
-                            identifier = f"Aposentado{len(registro) + 1}"
-                            
-                            # Adiciona a data e hora do cadastro
-                            funcionario["data_hora_cadastro"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-                            # Armazena o funcionário no dicionário registro com o identificador automático
-                            registro[identifier] = funcionario
-                            save_registry()
-                            
-                            conn.send(f"{identifier}_CADASTRADO".encode())
-                    else:
-                        conn.send("DADOS_FUNCIONARIO_INVALIDOS".encode())
+                    conn.send("SERVIDOR AUXILIAR, NÃO POSSUI AUTORIDADE PARA ESCRITA.")
+                    print("SERVIDOR AUXILIAR, NÃO POSSUI AUTORIDADE PARA ESCRITA.")
                 
                 elif operation == "PESQUISAR_FUNCIONARIO":
 
@@ -173,7 +126,6 @@ def handle_client(conn, addr):
                     else:
                         conn.send("DADOS_FUNCIONARIO_INVALIDOS".encode())
 
-
                 elif operation == "ENVIAR_REGISTRO":
 
                     # Envia o conteúdo do arquivo de registros como JSON
@@ -183,7 +135,7 @@ def handle_client(conn, addr):
                     print(f"Registros Iguais entre esse servidor e o {addr}")
 
                 elif operation == "ORDEM_DE_ATUALIZACAO":
-
+                    
                     # Substitui o registro atual pelo novo registro recebido somente se forem diferentes
 
                     novo_registro = request.get("registro")
@@ -217,9 +169,9 @@ def handle_client(conn, addr):
 
 def start_server():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(("localhost", 5005))
+    server.bind(("localhost", 5010))
     server.listen()
-    print("Servidor iniciado em localhost:5005")
+    print("Servidor iniciado em localhost:5010")
 
     while True:
         conn, addr = server.accept()
@@ -267,19 +219,33 @@ def checagem_de_registro(IP, Porta):
     except Exception as e:
         print(f"Erro ao conectar ao servidor {IP}:{Porta} - {e}")
 
+def Pedir_Registro(IP, Porta):
+    global registro
+    try:
+        # Conecta ao outro servidor
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.connect((IP, Porta))
+            
+            # Solicita o conteúdo do registro
+            request = {"operation": "ENVIAR_REGISTRO"}
+            sock.send(json.dumps(request).encode())
 
+            # Recebe a resposta
+            response = sock.recv(4096).decode()
+            OUTRO_registro = json.loads(response)
+
+            registro= OUTRO_registro
+            save_registry()
+
+    except Exception as e:
+        print(f"Erro ao conectar ao servidor {IP}:{Porta} - {e}")
 
 # Inicia o servidor e a verificação 
 if __name__ == "__main__":
-    service_name = "servidor_registrador"
-    server_ip = "127.0.0.1"
-    server_port = 5005
-    
-    asyncio.run(register_with_middleware(service_name, server_ip, server_port))
-    
     # Inicia o servidor em uma thread separada
     server_thread = threading.Thread(target=start_server)
     server_thread.start()
+    Pedir_Registro("localhost", 5005)
     
     # Inicia a verificação  com todos os servidores
     check_thread = threading.Thread(target=checagem_temporaria)
